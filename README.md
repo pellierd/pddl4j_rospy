@@ -31,10 +31,11 @@ You have to specify if you want to run it synchronously, by default it while ini
 Before using the package, you need to edit the pddl4j_rospy.cfg.
 remplace the line "plannerpath" by the absolute path to your ROS package.
 >> nano pddl4j_rospy.cfg
+
 You also need to edit the exempledirectory line. It is used if you want to solve existing problems (some are given in the src/problems/ directory)
 
 To make him resolv a problem in a determined domain, you have to write a ROS talker (http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29) 
-to publish on the domain_problem_from_controller_topic topic. The format of the message is ["domainPath__problemPath"] where domainPath and problemPath are absolute path to .pddl domain and problem files 
+to publish on the domain_problem_from_controller_topic topic. The format of the message is ["domainPath__problemPath"] where domainPath and problemPath are absolute path to .pddl domain and problem files. 
 
 If you want to solve an exemple, you can just use ["directoryOfTheProblemName__problemName"] for exemple : ["blocksworld__p01"]
 

@@ -34,7 +34,8 @@ remplace the line "plannerpath" by the absolute path to your ROS package.
 You also need to edit the exempledirectory line. It is used if you want to solve existing problems (some are given in the src/problems/ directory)
 
 To make him resolv a problem in a determined domain, you have to write a ROS talker (http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29) 
-to publish on the domain_problem_from_controller_topic topic. The format of the message is ["domainPath__problemPath"] 
+to publish on the domain_problem_from_controller_topic topic. The format of the message is ["domainPath__problemPath"] where domainPath and problemPath are absolute path to .pddl domain and problem files 
+
 If you want to solve an exemple, you can just use ["directoryOfTheProblemName__problemName"] for exemple : ["blocksworld__p01"]
 
 You can also simulate a ROS talker by using rostopic
@@ -43,6 +44,9 @@ You can also simulate a ROS talker by using rostopic
 The pddl4j_rospy node will wait a Subscriber on his plan_from_pddl4j_topic topic to write the answer.
 In order to simulate a subscribe, you can use rostopic
 >> rostopic echo /plan_from_pddl4j_topic
+
+A basic utilisation of the SequentialPlan object is available in the PDDL4J_rospy_unit_test.py 
+in the test_resolvProblem_display_actions function.
 
 The result is a serialized representation of a SequentialPlan (class in src/libs/pddl4j_rospy/). To use it as an object you will
 need to import the /src/libs/pddl4j_rospy/ content in your project and deserialize it using cPickle

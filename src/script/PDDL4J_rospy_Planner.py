@@ -42,6 +42,8 @@ class Planner:
 
 	EXEMPLE_DIRECTORY = ""
 
+	JSON_PATH = ""
+
 	sequentialPlan = "null"
 
 	sync = ""
@@ -57,6 +59,7 @@ class Planner:
 
 		self.PLANNER_PATH = self.config.get('options','plannerpath')
 		self.EXEMPLE_DIRECTORY = self.config.get('options','exempledirectory')
+		self.JSON_PATH = self.config.get('options','jsonpath')
 
 		self.sync = sync
 
@@ -213,16 +216,15 @@ class Planner:
 
 		pathProblem = self.EXEMPLE_DIRECTORY + problemDirectory + "/" + problemName + ".pddl"
 		pathDomain = self.EXEMPLE_DIRECTORY + problemDirectory + "/domain.pddl"
-		jsonPath = self.PLANNER_PATH + "src/jsonFiles/JSONPlan.json"
 
 		operationStatus = "INIT"
 		problemResolved = False
 
 
 		if(os.path.isfile(problemDirectory) and os.path.isfile(problemName)):
-			javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + problemDirectory + " -f " + problemName
+			javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + problemDirectory + " -f " + problemName + " -json " + self.JSON_PATH
 		elif(os.path.isfile(pathDomain) and os.path.isfile(pathProblem)):
-			javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + pathDomain + " -f " + pathProblem
+			javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + pathDomain + " -f " + pathProblem + " -json " + self.JSON_PATH
 		else:
 			operationStatus = "fileNotFound"
 
@@ -230,7 +232,7 @@ class Planner:
 			#Launch the java command
 			os.system(javaCommand);
 			try:
-				self.sequentialPlan = adaptator.getSequentialPlanFromJson(jsonPath)
+				self.sequentialPlan = adaptator.getSequentialPlanFromJson(self.JSON_PATH)
 				operationStatus = "Ok"
 				problemResolved = True
 			except Exception as e:
@@ -241,5 +243,17 @@ class Planner:
 			print("One of the file could not be found...")
 			self.sequentialPlan = "False"
 
-		returnData = [jsonPath, problemResolved, problemDirectory, problemName, self.sequentialPlan, operationStatus]
+		returnData = [self.JSON_PATH, problemResolved, problemDirectory, problemName, self.sequentialPlan, operationStatus]
 		return returnData
+
+
+if __name__ == "__main__":
+	try:
+		synchrone = sys.argv[0:][1]
+	except Exception as ex:
+		synchrone = "async"
+	
+	planner = Planner()
+	planner.setSynchro(synchrone)
+	print("synchro : " + synchrone)
+	planner.launch()

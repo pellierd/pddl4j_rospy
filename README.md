@@ -56,8 +56,8 @@ A basic utilisation of the SequentialPlan object is available in the PDDL4J_rosp
 in the test_resolvProblem_display_actions function.
 
 >>#printing the action name and all the parameters of this action
->>for action in sequentialPlan.actions():
->>	print("action : " + action._get_name()),
->>	for parameter in action._get_parameters():
->>		print(parameter),
->>	print("\n"),
+  for action in sequentialPlan.actions():
+	print("action : " + action._get_name()),
+	for parameter in action._get_parameters():
+		print(parameter),
+	print("\n"),

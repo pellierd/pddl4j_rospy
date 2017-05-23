@@ -55,11 +55,11 @@ need to import the /src/libs/pddl4j_rospy/ content in your project and deseriali
 A basic utilisation of the SequentialPlan object is available in the PDDL4J_rospy_unit_test.py 
 in the test_resolvProblem_display_actions function.
 
-'''python
+```python
 #printing the action name and all the parameters of this action
 for action in sequentialPlan.actions():
 	print("action : " + action._get_name()),
 	for parameter in action._get_parameters():
 		print(parameter),
 	print("\n"),
-'''
+```

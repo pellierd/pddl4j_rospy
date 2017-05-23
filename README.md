@@ -1,4 +1,4 @@
-##catkin_planner_PDDL4J
+##pddl4j_rospy
 
 ###1. Contact
 

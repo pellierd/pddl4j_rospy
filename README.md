@@ -46,11 +46,18 @@ The pddl4j_rospy node will wait a Subscriber on his plan_from_pddl4j_topic topic
 In order to simulate a subscribe, you can use rostopic
 >> rostopic echo /plan_from_pddl4j_topic
 
-A basic utilisation of the SequentialPlan object is available in the PDDL4J_rospy_unit_test.py 
-in the test_resolvProblem_display_actions function.
-
 The result is a serialized representation of a SequentialPlan (class in src/libs/pddl4j_rospy/). To use it as an object you will
 need to import the /src/libs/pddl4j_rospy/ content in your project and deserialize it using cPickle
 >> import cPickle as pickle
 
 >> sequentialPlan = loads(result_returned_by_the_planner_in_string)
+
+A basic utilisation of the SequentialPlan object is available in the PDDL4J_rospy_unit_test.py 
+in the test_resolvProblem_display_actions function.
+
+>>#printing the action name and all the parameters of this action
+>>for action in sequentialPlan.actions():
+>>	print("action : " + action._get_name()),
+>>	for parameter in action._get_parameters():
+>>		print(parameter),
+>>	print("\n"),

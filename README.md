@@ -31,6 +31,7 @@ You have to specify if you want to run it synchronously, by default it while ini
 Before using the package, you need to edit the pddl4j_rospy.cfg.
 remplace the line "plannerpath" by the absolute path to your ROS package.
 >> nano pddl4j_rospy.cfg
+
 You also need to edit the exempledirectory line. It is used if you want to solve existing problems (some are given in the src/problems/ directory)
 
 To make him resolv a problem in a determined domain, you have to write a ROS talker (http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29) 

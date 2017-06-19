@@ -2,6 +2,9 @@
 
 ###1. Contact
 
+Thibault Schaeller
+thibault.schaeller@etu.univ-grenoble-alpes.fr
+
 ###2. Description
 
 pddl4j_rospy is the ROS implementation of the PDDL4J library (https://github.com/pellierd/pddl4j)

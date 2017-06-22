@@ -63,3 +63,8 @@ for action in sequentialPlan.actions():
 		print(parameter),
 	print("\n"),
 ```
+
+####3.3 Evolution
+Working on library to add a PlannerFactory class which will allow you to configure the planner you want to use at the beginning of the node
+or in the configuration file (default HSP planner)
+Editing the gradle to get another .jar file which will be used by the ROS node. It will launch the factory class with all the parameters it needs

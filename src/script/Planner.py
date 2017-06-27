@@ -9,13 +9,18 @@ import ConfigParser
 # Msg structure for the topic communication
 from std_msgs.msg import String
 
+config = ConfigParser.ConfigParser()
+config.read('config/pddl4j_rospy_config.cfg')
+cwd = config.get('options', 'catkinpath')
+
+sys.path.append(cwd + 'devel/lib/python2.7/dist-packages/pddl4j_rospy/')
 # Structure for the service communication
-from catkin_planner_PDDL4J.srv import *
+from srv import *
 
 # Serialization
 import cPickle as pickle
 
-sys.path.append('src/libs/pddl4j_rospy/')
+sys.path.append('src/libs/util/')
 import AdaptatorPlanJsonPython as adaptator
 
 
@@ -56,13 +61,13 @@ class Planner:
 		:param: string sync: "sync" or "async" 
 	    :return: void
 		'''
-        self.config.read('pddl4j_rospy.cfg')
+        self.config.read('config/pddl4j_rospy_config.cfg')
 
         self.PLANNER_PATH = self.config.get('options', 'plannerpath')
         self.EXEMPLE_DIRECTORY = self.config.get('options', 'exempledirectory')
         self.JSON_PATH = self.config.get('options', 'jsonpath')
-        self.JAVA_PLANNER_FACTORY = self.config.get(
-            'options', 'javaplannerfactory')
+        #self.JAVA_PLANNER_FACTORY = self.config.get(
+        #    'options', 'javaplannerfactory')
 
         self.sync = sync
 
@@ -136,10 +141,7 @@ class Planner:
             print("The problem has been resolved...\n"
                   + "Sending result to the controller...")
             if not rospy.is_shutdown():
-                str_sent = jsonPath + "___True___" + problemDirectory
-                + "___" + problemName + "___" + \
-                    pickle.dumps(
-                        jsonPythonObject, pickle.HIGHEST_PROTOCOL) + "___" + operationStatus
+                str_sent = jsonPath + "___True___" + problemDirectory + "___" + problemName + "___" + pickle.dumps(jsonPythonObject, pickle.HIGHEST_PROTOCOL) + "___" + operationStatus
         else:
             print(
                 "The problem has not been resolved...\nSending result to the controller...")
@@ -193,9 +195,7 @@ class Planner:
                 print(
                     "The problem has been resolved...\nSending result to the controller...")
                 if not rospy.is_shutdown():
-                    str_sent = jsonPath + "___True___" + problemDirectory + "___" + problemName + "___" + \
-                        pickle.dumps(
-                            jsonPythonObject, pickle.HIGHEST_PROTOCOL) + "___" + operationStatus
+                    str_sent = jsonPath + "___True___" + problemDirectory + "___" + problemName + "___" + pickle.dumps(jsonPythonObject, pickle.HIGHEST_PROTOCOL) + "___" + operationStatus
             else:
                 print(
                     "The problem has not been resolved...\nSending result to the controller...")
@@ -230,6 +230,7 @@ class Planner:
         :param: string req: [problemDirectory__problemName] 
     :return: void
         '''
+        print("Exemple directory : " + self.EXEMPLE_DIRECTORY)
         try:
             problemDirectory = req.data.split("__")[0]
             problemName = req.data.split("__")[1]

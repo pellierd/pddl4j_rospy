@@ -268,9 +268,9 @@ class Planner:
                     "Usage : rosrun pddl4j_rospy "
                     + "PDDL4J_rospy_ros_node.py [sync]")
 
-    # 			Communication functions (topic and services)		   #
+    # 			Communication functions (topic and services)		   
     ####################################################################
-    ###					asynchronous Communication 					###
+    ###			Asynchronous Communication 					
 
     def listenerDomainNameProblem(self):
         '''
@@ -330,7 +330,7 @@ class Planner:
 
         print("Still ready to resolv a problem on the topic...")
 
-    ###					synchronous Communication 					###
+    ###					Synchronous Communication 					
     def serverDomainNameProblem(self):
         '''
         Wait to be requested by a RequestPlannerPlanification structure service message
@@ -376,7 +376,7 @@ class Planner:
         except Exception as e:
             print("Service call failed : %s" % e)
 
-    #						Resolution functions					   #
+    #						Resolution functions					   
     ####################################################################
 
     def resolvProblemAsTopic(self, req):

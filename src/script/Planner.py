@@ -194,19 +194,19 @@ import AdaptatorPlanJsonPython as adaptator
 
 class Planner:
     #########################################################################
-    # PDDL4J-rospy is a ROS implementation for the PDDL4J in python			#
-    # library															 	#
-    #																		#
-    # The ROS node can be used asynchronously by publishing a String 		#
-    # on the domain_problem_from_controller_topic topic.					#
-    # 																		#
-    # It can also be used synchronously by using a simple client/server		#
-    # service. In this case, the service to request is 						#
-    # serverDomainNameProblem and the answer is going to be a 				#
-    # RequestPlannerPlanification											#
-    #																		#
-    # Use rosrun catkin_planner_PDDL4J catkin_planner_PDDL4J_script.py sync	#
-    # to launch the node synchronously										#
+    # PDDL4J-rospy is a ROS implementation for the PDDL4J in python			
+    # library															 	
+    #																		
+    # The ROS node can be used asynchronously by publishing a String 		
+    # on the domain_problem_from_controller_topic topic.					
+    # 																		
+    # It can also be used synchronously by using a simple client/server		
+    # service. In this case, the service to request is 						
+    # serverDomainNameProblem and the answer is going to be a 				
+    # RequestPlannerPlanification											
+    #																		
+    # Use rosrun catkin_planner_PDDL4J catkin_planner_PDDL4J_script.py sync	
+    # to launch the node synchronously										
     #########################################################################
 
     # The config object

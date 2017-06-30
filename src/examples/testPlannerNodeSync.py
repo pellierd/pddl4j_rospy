@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-<<<<<<< HEAD
-=======
 '''
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -170,95 +168,74 @@ permanent authorization for you to choose that version for the
 Library.
 '''
 
->>>>>>> devel
-import unittest
+import rospy
 import sys
+from std_msgs.msg import String
 import cPickle as pickle
 
-#import the Planner class
-sys.path.append('src/script')
-from PDDL4J_rospy_Planner import Planner
+sys.path.append('src/python/')
 
-sys.path.append('src/libs/pddl4j_rospy')
-from Exp import Exp
-from CondExp import CondExp
-from Exp import Exp
-from Fluents import Fluents
-from Action import Action
-from SequentialPlan import SequentialPlan
+from pddl4j_rospy.srv import *
+#using the service of the Planner node
+#it will solve the problem synchronously
+def client(problemDirectory, problemName):
+	print("Waiting for the service...")
+	rospy.wait_for_service('serverDomainNameProblem')
+	try:
+		print("Connection to the planner server...")
+		problemSolver = rospy.ServiceProxy('serverDomainNameProblem', RequestPlannerPlanification)
 
-#Structure for the service communication
-from catkin_planner_PDDL4J.srv import *
+		print("Connection successfull, generation of the solution...")
+		response = problemSolver(problemDirectory, problemName)
 
-#adaptator which allow you to display the actions of a Plan python object
-sys.path.append('src/libs/pddl4j_rospy/')
-import AdaptatorPlanJsonPython as adaptator
+		callback(response)
 
-class test_req_Planner():
-	'''
-	Test class used to simulate the request sent to the callback function
-	in the asynchronous mode
-	'''
-	data = ""
-
-	def __init__(self, message):
-		self.data = message
+	except Exception as e:
+		print("Service call failed : %s"%e)
 
 
+def callback(req):
+	#The message received is formated like this :
+	#PathToThePlanAsJsonFile___problemResolved___pathToTheDomainFile/NameOfTheExempleDirectory
+	#___pathToTheProblemFile/NameOfTheExempleProblem___SerializedVersionOfThePlanAsAnObject___OperationStatus
 
-class test_Planner(unittest.TestCase):
-	'''
-	Unit test for the PDDL4J_rospy_Planner class
-	'''
+	#For exemple if we ask to solve the problem mojito.pddl in the barman directory (from the exemple directory)
+	#pddl4j_rospy/src/jsonFiles/plan.json___True___barman___mojito___OBJECT-SERIALIZED___Ok
 
-	planner = Planner()
+	jsonPath = req.data.split("___")[0]
+	problemResolved = req.data.split("___")[1]
+	problemDirectory = req.data.split("___")[2]
+	problemName = req.data.split("___")[3]
+	serializedJsonPythonObject = req.data.split("___")[4]
+	operationStatus = req.data.split("___")[5]
 
-	def test_resolvProblem_as_topic(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		'''
-		req = test_req_Planner("blocksworld__p01")
-		self.planner.resolvProblem(req)
+	#If the problem has been resolved
+	if problemResolved == "True":
+		#we generate the object using cPickles
+		print("Generation of the json object from the serialized version...")
+		sequentialPlan = pickle.loads(serializedJsonPythonObject)
+		print("Object generated...")
+		#And we display the actions of the plan
+		displayAction(sequentialPlan)
+	else:
+		#Else we look after the operationStatus to know what went wrong
+		if operationStatus == "fileNotFound":
+			print("The problem " + problemName + " from the directory " + problemDirectory + " could not been solved\n" 
+				+ "Because the files could not been found...")
+		else:
+			print("Something went wrong and the problem could not been solved")
 
-	def test_resolvProblem_as_topic_file_not_found(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		here the files cannot be found
-		'''
-		req = test_req_Planner("file__notFound")
-		self.planner.resolvProblem(req)
 
-	def test_resolvProblem_as_topic_absolute_path(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		here the paths are absolute
-		'''
-		req = test_req_Planner(self.planner.PLANNER_PATH + "src/problems/barman/domain.pddl__" + self.planner.PLANNER_PATH + "src/problems/barman/mojito.pddl");
-		self.planner.resolvProblem(req)
+def displayAction(sequentialPlan):
+	#printing the action name and all the parameters
+	for action in sequentialPlan.actions():
+		print("action : " + action._get_name()),
+		for parameter in action._get_parameters():
+			print(parameter),
+		print("\n"),
 
-	def test_resolvProblem_display_actions(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		and display the actions of the SequentialPlan generated
-		:param: string data: [problemDirectory__problemName] 
-		'''
-		req = test_req_Planner("blocksworld__p01")
-		data = self.planner.resolvProblem(req)
-		#data is an array :
-		#data = [JSON_PATH, problemResolved, problemDirectory, problemName, sequentialPlan, operationStatus]
-		sequentialPlan = data[4]
-
-		#printing the action name and all the parameters of this action
-		for action in sequentialPlan.actions():
-			print("action : " + action._get_name()),
-			for parameter in action._get_parameters():
-				print(parameter),
-			print("\n"),
-
-unittest.main()
+if __name__ == '__main__':
+	#Initialize a ROS node
+	rospy.init_node("testPlanner")
+	#Ask to resolv the mojito.pddl problem of the barman/domain.pddl domain
+	client("barman", "mojito")

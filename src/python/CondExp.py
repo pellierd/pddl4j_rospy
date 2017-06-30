@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-<<<<<<< HEAD
-=======
 '''
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -170,95 +168,107 @@ permanent authorization for you to choose that version for the
 Library.
 '''
 
->>>>>>> devel
-import unittest
-import sys
-import cPickle as pickle
-
-#import the Planner class
-sys.path.append('src/script')
-from PDDL4J_rospy_Planner import Planner
-
-sys.path.append('src/libs/pddl4j_rospy')
-from Exp import Exp
-from CondExp import CondExp
+import copy
 from Exp import Exp
 from Fluents import Fluents
-from Action import Action
-from SequentialPlan import SequentialPlan
-
-#Structure for the service communication
-from catkin_planner_PDDL4J.srv import *
-
-#adaptator which allow you to display the actions of a Plan python object
-sys.path.append('src/libs/pddl4j_rospy/')
-import AdaptatorPlanJsonPython as adaptator
-
-class test_req_Planner():
-	'''
-	Test class used to simulate the request sent to the callback function
-	in the asynchronous mode
-	'''
-	data = ""
-
-	def __init__(self, message):
-		self.data = message
 
 
+class CondExp:
+    """
+    This class allows to implements a conditional effects of an action.
+    """
 
-class test_Planner(unittest.TestCase):
-	'''
-	Unit test for the PDDL4J_rospy_Planner class
-	'''
+    def __init__(self, effects=None, conditions=None):
+        """
+        This is the constructor of our class
+        :param conditions: should be an Exp
+        :param effects: should be an Exp
+        """
+        if conditions is not None and effects is not None and isinstance(conditions, Exp) and isinstance(effects, Exp):
+            self._conditions = conditions
+            self._effects = effects
+        elif conditions is None and effects is not None and isinstance(effects, Exp):
+            self._conditions = Exp()
+            self._effects = effects
+        else:
+            self._conditions = Exp()
+            self._effects = Exp()
 
-	planner = Planner()
+    def copy(self):
+        """
+        This is the copy function that replace a copy construtor in Java
+        Do'nt work atm
+        :return: a copy of the object
+        """
+        if self is None:
+            return CondExp()
+        else:
+            return copy.deepcopy(self)
 
-	def test_resolvProblem_as_topic(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		'''
-		req = test_req_Planner("blocksworld__p01")
-		self.planner.resolvProblem(req)
+    def _get_conditions(self):
+        """
+        condition's getter
+        """
+        return self._conditions
 
-	def test_resolvProblem_as_topic_file_not_found(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		here the files cannot be found
-		'''
-		req = test_req_Planner("file__notFound")
-		self.planner.resolvProblem(req)
+    def _get_effects(self):
+        """Effects's getter"""
+        return self._effects
 
-	def test_resolvProblem_as_topic_absolute_path(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		this function is waiting a data structure like:
-		:param: string data: [problemDirectory__problemName] 
-		here the paths are absolute
-		'''
-		req = test_req_Planner(self.planner.PLANNER_PATH + "src/problems/barman/domain.pddl__" + self.planner.PLANNER_PATH + "src/problems/barman/mojito.pddl");
-		self.planner.resolvProblem(req)
+    def _set_conditions(self, conditions):
+        """Conditions's setter
+            :param conditions : The value we want to set for the condition of the CondExp"""
+        if isinstance(conditions,Exp):
+            self._conditions = conditions
+        else:
+            print ("Conditions can't be affected because it's not an Exp")
 
-	def test_resolvProblem_display_actions(self):
-		'''
-		Testing the resolvProblemAsTopic function
-		and display the actions of the SequentialPlan generated
-		:param: string data: [problemDirectory__problemName] 
-		'''
-		req = test_req_Planner("blocksworld__p01")
-		data = self.planner.resolvProblem(req)
-		#data is an array :
-		#data = [JSON_PATH, problemResolved, problemDirectory, problemName, sequentialPlan, operationStatus]
-		sequentialPlan = data[4]
+    def _set_effects(self, effects):
+        """Effects's setter
+           :param effects : The value we want to set for the effect of the CondExp
+        """
+        if isinstance(effects,Exp):
+            self._effects = effects
+        else:
+            print ("Effects can't be affected because it's not an Exp")
 
-		#printing the action name and all the parameters of this action
-		for action in sequentialPlan.actions():
-			print("action : " + action._get_name()),
-			for parameter in action._get_parameters():
-				print(parameter),
-			print("\n"),
+    def affiche(self):
+        """
+        This function display the informations of the CondExp
+        """
+        print ("Display of the CondExp :\n")
+        print ("conditions part : \n")
+        self._conditions.affiche()
+        print ("\n")
+        print ("effects part : \n")
+        self._effects.affiche()
 
-unittest.main()
+    # This is the property, that protect the use of the _gets and _sets of the class
+    conditions = property(_get_conditions,_set_conditions)
+    effects = property(_get_effects,_set_effects)
+
+if __name__ == '__main__':
+
+    # Test of the class
+
+    #  Creation of a CondExp with only effects
+    fluent_positives_effects = Fluents("on", "a", "b")
+    fluent_negatives_effects = Fluents("handempty", "j", "c")
+    exp_effect = Exp(fluent_positives_effects, fluent_negatives_effects)
+    cond_exp_with_only_effects = CondExp(exp_effect)
+
+    # Creation of a CondExp with a conditions & a effects
+    fluents_positives_conditions = Fluents("on", "y", "z")
+    fluents_negatives_conditions = Fluents("on", "t", "n")
+    exp_conditions = Exp(fluents_positives_conditions, fluents_negatives_conditions)
+    cond_exp_conditions_effects = CondExp(exp_effect, exp_conditions)
+    cond_exp_conditions_effects.affiche()
+
+
+
+
+
+
+
+
+

@@ -173,8 +173,7 @@ import sys
 from std_msgs.msg import String
 import cPickle as pickle
 
-#sys.path.append('src/libs/util/')
-#import AdaptatorPlanJsonPython as adaptator
+sys.path.append('src/python/')
 
 from pddl4j_rospy.srv import *
 #using the service of the Planner node

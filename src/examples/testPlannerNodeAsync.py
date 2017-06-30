@@ -173,8 +173,7 @@ import sys
 from std_msgs.msg import String
 import cPickle as pickle
 
-sys.path.append('src/libs/util/')
-import AdaptatorPlanJsonPython as adaptator
+sys.path.append('src/python/')
 
 def listener():
 	#Wait for a message to come on plan_from_pddl4j_topic

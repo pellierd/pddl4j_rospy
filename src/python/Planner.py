@@ -188,7 +188,6 @@ from srv import *
 # Serialization
 import cPickle as pickle
 
-sys.path.append('src/libs/util/')
 import AdaptatorPlanJsonPython as adaptator
 
 

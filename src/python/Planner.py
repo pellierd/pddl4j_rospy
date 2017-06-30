@@ -233,8 +233,8 @@ class Planner:
         self.PLANNER_PATH = self.config.get('options', 'plannerpath')
         self.EXEMPLE_DIRECTORY = self.config.get('options', 'exempledirectory')
         self.JSON_PATH = self.config.get('options', 'jsonpath')
-        #self.JAVA_PLANNER_FACTORY = self.config.get(
-        #    'options', 'javaplannerfactory')
+        self.PDDL4J_JAR_PATH = self.config.get(
+            'options', 'pddl4jjarpath')
 
         self.sync = sync
 
@@ -413,10 +413,10 @@ class Planner:
         problemResolved = False
 
         if(os.path.isfile(problemDirectory) and os.path.isfile(problemName)):
-            javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + \
+            javaCommand = "java -jar " + self.PDDL4J_JAR_PATH + " -o " + \
                 problemDirectory + " -f " + problemName + " -json " + self.JSON_PATH
         elif(os.path.isfile(pathDomain) and os.path.isfile(pathProblem)):
-            javaCommand = "java -jar " + self.PLANNER_PATH + "src/java/core-pddl4j.jar -o " + \
+            javaCommand = "java -jar " + self.PDDL4J_JAR_PATH + " -o " + \
                 pathDomain + " -f " + pathProblem + " -json " + self.JSON_PATH
         else:
             javaCommand = "Error: File not found..."

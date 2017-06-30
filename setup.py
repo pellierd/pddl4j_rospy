@@ -146,9 +146,8 @@ def editConfigFile():
 		catkinpatharray.pop()
 		catkinpath = '/'.join(catkinpatharray)
 
-		sub = subprocess.Popen(['locate', '*pddl4j-[3-9].[0-9].[0.9].jar'], stdout=subprocess.PIPE)
+		sub = subprocess.Popen(['locate', 'core-pddl4j.jar'], stdout=subprocess.PIPE)
 		pddl4j_path = sub.communicate()[0].split('\n')[0]
-
 
 		config.add_section('options')
 

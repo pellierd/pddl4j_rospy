@@ -102,7 +102,7 @@ def clonePDDL4JFromGit(){
     System.out.println(">> Downloading the library from https://github.com/pellierd/pddl4j into the ~/pddl4j/ directory...")
     String command = "git clone https://github.com/pellierd/pddl4j " + parent_file.getCanonicalPath().toString() + "/pddl4j"
     System.out.println("Voici la commande GIT : " + command)
-    // Process p = Runtime.getRuntime().exec(command)
+    Process p = Runtime.getRuntime().exec(command)
 }
 
 def buildPDDL4J(){
@@ -123,7 +123,6 @@ def buildPDDL4J(){
     while ((ligne = error.readLine()) != null) {
         System.out.println(ligne);
     }
-    // p.waitFor()
 }
 
 def editConfigFile(){
@@ -146,4 +145,3 @@ def editConfigFile(){
     writer.println("pddl4jjarpath = " + project.current_dir + "/build/libs/core-pddl4j-1.0.jar");
     writer.close()
 }
-// RAF :  - Voir pour Windows

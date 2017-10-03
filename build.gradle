@@ -62,7 +62,7 @@ task build(type: Jar) {
 
 
 def testIfPddl4jIsInstalled() {
-    ProcessBuilder builder = new ProcessBuilder("locate", "*pddl6j-[3-9].[0-9].[0.9].jar");
+    ProcessBuilder builder = new ProcessBuilder("locate", "*pddl4j-[3-9].[0-9].[0.9].jar");
     builder.redirectErrorStream(true);
     Process p = builder.start();
     BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
